@@ -66,7 +66,7 @@ type ProductService interface {
 }
 
 func (b *BuyClient) GetProducts(page int) ([]*Product, error) {
-	url := scheme + path.Join(b.shopDomain, "api", "apps", b.appIdStr(), "product_listings.json")
+	url := scheme + path.Join(b.shopDomain, "api", "apps", b.appId, "product_listings.json")
 	rsp, err := b.get(url)
 	if err != nil {
 		return nil, err

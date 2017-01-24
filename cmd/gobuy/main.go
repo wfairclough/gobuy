@@ -1,37 +1,62 @@
 package main
 
 import (
-	"encoding/json"
+	"flag"
 	"fmt"
-
-	"github.com/wfairclough/gobuy"
+	"os"
+	"strings"
+	"text/template"
 )
 
-func main() {
-	fmt.Println("Go Buy SDK command")
-
-	client := gobuy.Client("example.myshopify.com", "Example App", "a8a5cd65ad764ac64d", 3)
-	shop, err := client.GetShop()
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	b, err := json.MarshalIndent(shop, "", "   ")
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	fmt.Printf("%s\n\n", string(b))
-
-	products, err := client.GetProducts(1)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	b, err = json.MarshalIndent(products, "", "   ")
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	fmt.Printf("%s", string(b))
+var commands = []*Command{
+	shopCmd,
+	productCmd,
 }
+
+func main() {
+	flag.Usage = usage
+	flag.Parse()
+
+	args := flag.Args()
+	if len(args) == 0 || args[0] == "-h" {
+		flag.Usage()
+		return
+	}
+
+	var cmd *Command
+	name := args[0]
+	for _, c := range commands {
+		if strings.HasPrefix(c.Name, name) {
+			cmd = c
+			break
+		}
+	}
+
+	if cmd == nil {
+		fmt.Printf("error: unknown command %q\n", name)
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	cmd.Exec(args[1:])
+}
+
+func usage() {
+	fmt.Print(usagePrefix)
+	flag.PrintDefaults()
+	usageTmpl.Execute(os.Stdout, commands)
+}
+
+var usagePrefix = `
+gobuy is a command line tool for accessing your Shopify store through the Buy SDK
+
+Usage:
+    gobuy [options] <subcommand> [subcommand options]
+
+Options:
+`
+var usageTmpl = template.Must(template.New("usage").Parse(
+	`
+Commands:{{range .}}
+    {{.Name | printf "%-10s"}} {{.Summary}}{{end}}
+`))

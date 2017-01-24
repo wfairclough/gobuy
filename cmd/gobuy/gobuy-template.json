@@ -1,0 +1,14 @@
+// gobuy configuration
+{
+  // The domain of your shop
+  "shop_domain": "exmaple.myshopify.com",
+
+  // The name of the app using the Buy SDK
+  "app_name": "example",
+
+  // API Key provided by the Mobile App sales channel for Mobile Buy SDK integration
+  "api_key": "3fce8e269c5945268e20ca5460614f25",
+
+  // App ID provided by the Mobile App sales channel for Mobile Buy SDK integration
+  "app_id": "3"
+}

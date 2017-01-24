@@ -1,7 +1,6 @@
 package gobuy
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -16,11 +15,11 @@ type BuyClient struct {
 	shopDomain string
 	appName    string
 	apiKey     string
-	appId      int
+	appId      string
 }
 
 // Client creates a new BuyClient with the given options
-func Client(shopDomain, appName, apiKey string, appId int) *BuyClient {
+func Client(shopDomain, appName, apiKey, appId string) *BuyClient {
 	return &BuyClient{
 		client: &http.Client{
 			Timeout: 30 * time.Second,
@@ -30,10 +29,6 @@ func Client(shopDomain, appName, apiKey string, appId int) *BuyClient {
 		apiKey:     apiKey,
 		appId:      appId,
 	}
-}
-
-func (b *BuyClient) appIdStr() string {
-	return fmt.Sprintf("%d", b.appId)
 }
 
 func (b *BuyClient) makeRequest(method, url string, r io.Reader) (*http.Request, error) {

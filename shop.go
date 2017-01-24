@@ -31,7 +31,7 @@ type StoreService interface {
 }
 
 func (b *BuyClient) GetShop() (*Shop, error) {
-	rsp, err := b.get(scheme + path.Join(b.shopDomain, shopPath))
+	rsp, err := b.get(scheme+path.Join(b.shopDomain, shopPath), nil)
 	if err != nil {
 		return nil, err
 	}

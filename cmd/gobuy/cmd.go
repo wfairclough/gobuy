@@ -9,15 +9,20 @@ type Command struct {
 	Flag flag.FlagSet
 
 	Name  string
-	Usage string
+	Usage func(cmd *Command)
 
 	Summary string
 	Help    string
+
+	SetupFlags func(fs *flag.FlagSet)
 }
 
 func (c *Command) Exec(args []string) {
+	if c.SetupFlags != nil {
+		c.SetupFlags(&c.Flag)
+	}
 	c.Flag.Usage = func() {
-		// helpFunc(c, c.Name)
+		c.Usage(c)
 	}
 	c.Flag.Parse(args)
 	c.Run(c, c.Flag.Args()...)

@@ -8,7 +8,7 @@ import (
 
 var shopCmd = &Command{
 	Name:    "shop",
-	Usage:   "",
+	Usage:   shopUsage,
 	Summary: "Actions related to your Shopify Shop",
 	Help:    `down extended help here...`,
 	Run:     shopRun,
@@ -32,4 +32,8 @@ func shopRun(cmd *Command, args ...string) {
 		return
 	}
 	fmt.Printf("%s\n\n", string(b))
+}
+
+func shopUsage(cmd *Command) {
+	cmd.Flag.PrintDefaults()
 }

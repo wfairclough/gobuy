@@ -2,6 +2,7 @@ package gobuy
 
 import (
 	"encoding/json"
+	"fmt"
 	"path"
 )
 
@@ -62,12 +63,15 @@ type ProductVariant struct {
 }
 
 type ProductService interface {
-	GetProducts(page int) ([]*Product, error)
+	GetProducts(page, limit int) ([]*Product, error)
 }
 
-func (b *BuyClient) GetProducts(page int) ([]*Product, error) {
+func (b *BuyClient) GetProducts(page, limit int) ([]*Product, error) {
 	url := scheme + path.Join(b.shopDomain, "api", "apps", b.appId, "product_listings.json")
-	rsp, err := b.get(url)
+	q := make(map[string]string)
+	q["page"] = fmt.Sprintf("%d", page)
+	q["limit"] = fmt.Sprintf("%d", limit)
+	rsp, err := b.get(url, q)
 	if err != nil {
 		return nil, err
 	}

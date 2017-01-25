@@ -2,11 +2,10 @@ package gobuy
 
 import (
 	"encoding/json"
-	"path"
 )
 
 const (
-	shopPath = "meta.json"
+	shopPathTmpl = "meta.json"
 )
 
 type Shop struct {
@@ -31,7 +30,10 @@ type StoreService interface {
 }
 
 func (b *BuyClient) GetShop() (*Shop, error) {
-	rsp, err := b.get(scheme+path.Join(b.shopDomain, shopPath), nil)
+	rsp, err := b.sendShopifyRequest(requestOptions{
+		method:      "GET",
+		urlTemplate: shopPathTmpl,
+	})
 	if err != nil {
 		return nil, err
 	}

@@ -63,17 +63,32 @@ var productGetCmd = &Command{
 	Help:    `down extended help here...`,
 	Run:     productGetRun,
 	SetupFlags: func(fs *flag.FlagSet) {
-		fs.String("handle", "", "The handle for the product to fetch")
+		handle = fs.String("handle", "", "The handle for the product to fetch")
 	},
 }
 
 func productGetRun(cmd *Command, args ...string) {
-	if len(args) == 0 {
-		cmd.Flag.Usage()
-		return
+	// if len(args) == 0 {
+	// 	cmd.Flag.Usage()
+	// 	return
+	// }
+
+	client, err := clientFromConfig()
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	log.Fatal("Unimplemented product get")
+	products, err := client.GetProductByHandle(*handle)
+	if err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+	b, err := json.MarshalIndent(products, "", "   ")
+	if err != nil {
+		log.Fatal(err.Error())
+		return
+	}
+	fmt.Printf("%s\n\n", string(b))
 }
 
 func productGetUsage(cmd *Command) {
@@ -91,7 +106,6 @@ Usage:
 Options:
 `
 
-var page, limit *int
 var productListCmd = &Command{
 	Name:    "list",
 	Usage:   productListUsage,

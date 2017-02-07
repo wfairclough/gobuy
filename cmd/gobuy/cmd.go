@@ -4,6 +4,13 @@ import (
 	"flag"
 )
 
+// Command Flag variables
+var (
+	page   *int
+	limit  *int
+	handle *string
+)
+
 type Command struct {
 	Run  func(cmd *Command, args ...string)
 	Flag flag.FlagSet

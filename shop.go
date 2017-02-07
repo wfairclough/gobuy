@@ -1,8 +1,6 @@
 package gobuy
 
-import (
-	"encoding/json"
-)
+import ()
 
 const (
 	shopPathTmpl = "meta.json"
@@ -37,8 +35,7 @@ func (b *BuyClient) GetShop() (*Shop, error) {
 	if err != nil {
 		return nil, err
 	}
-	d := json.NewDecoder(rsp.Body)
 	s := &Shop{}
-	err = d.Decode(&s)
+	err = rsp.JsonDecode(&s)
 	return s, err
 }

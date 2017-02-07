@@ -2,6 +2,7 @@ package gobuy
 
 import (
 	"bytes"
+	"encoding/json"
 	"io"
 	"net/http"
 	"text/template"
@@ -127,7 +128,7 @@ func (b *BuyClient) buildShopifyRequest(opts requestOptions, extraHeaders ...hea
 	return b.buildRequest(opts, defaultHeaders)
 }
 
-func (b *BuyClient) sendShopifyRequest(opts requestOptions, extraHeaders ...header) (*http.Response, error) {
+func (b *BuyClient) sendShopifyRequest(opts requestOptions, extraHeaders ...header) (*shopifyResponse, error) {
 	req, err := b.buildShopifyRequest(opts, extraHeaders...)
 	if err != nil {
 		return nil, err
@@ -135,6 +136,19 @@ func (b *BuyClient) sendShopifyRequest(opts requestOptions, extraHeaders ...head
 	return b.send(req)
 }
 
-func (b BuyClient) send(req *http.Request) (*http.Response, error) {
-	return b.client.Do(req)
+func (b BuyClient) send(req *http.Request) (*shopifyResponse, error) {
+	rsp, err := b.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	return &shopifyResponse{rsp}, nil
+}
+
+type shopifyResponse struct {
+	*http.Response
+}
+
+func (r *shopifyResponse) JsonDecode(v interface{}) error {
+	d := json.NewDecoder(r.Body)
+	return d.Decode(v)
 }

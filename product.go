@@ -72,6 +72,11 @@ type (
 	ProductService interface {
 		GetProducts(page, limit int) ([]*Product, error)
 	}
+
+	ProductTag struct {
+		ID    int64  `json:"id"`
+		Title string `json:"title"`
+	}
 )
 
 // GetProducts fetches the products with pagination
@@ -113,4 +118,25 @@ func (b *BuyClient) GetProductByHandle(handle string) ([]*Product, error) {
 	}{}
 	err = d.Decode(&list)
 	return list.ProductListings, err
+}
+
+// GetProductTags fetches the product tags with pagination
+func (b *BuyClient) GetProductTags(page, limit int) ([]*ProductTag, error) {
+	q := make(map[string]string)
+	q["page"] = fmt.Sprintf("%d", page)
+	q["limit"] = fmt.Sprintf("%d", limit)
+	rsp, err := b.sendShopifyRequest(requestOptions{
+		method:      "GET",
+		urlTemplate: getProductListingsTagsPathTmpl,
+		queryParams: q,
+	})
+	if err != nil {
+		return nil, err
+	}
+	d := json.NewDecoder(rsp.Body)
+	list := &struct {
+		Tags []*ProductTag `json:"tags"`
+	}{}
+	err = d.Decode(&list)
+	return list.Tags, err
 }

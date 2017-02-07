@@ -10,7 +10,7 @@ import (
 	"path"
 	"regexp"
 
-	"github.com/wfairclough/gobuy"
+	"github.com/wfairclough/shopify-gobuy"
 )
 
 // Global Flags available to all commands

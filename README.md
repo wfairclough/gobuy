@@ -1,4 +1,4 @@
-# gobuy
+# shopify-gobuy
 
 Shopify Mobile Buy SDK library written in golang. This library makes it easy to create thin clients for your golang projects.
 
@@ -6,13 +6,13 @@ Shopify Mobile Buy SDK library written in golang. This library makes it easy to 
 
 Setup the `GOPATH` environment variable.
 
-Clone this repo or download as .zip into `$GOPATH/src/github.com/wfairclough/gobuy`
+Clone this repo or download as .zip into `$GOPATH/src/github.com/wfairclough/shopify-gobuy`
 
 ```bash
-git clone git@github.com:wfairclough/gobuy.git $GOPATH/src/github.com/wfairclough/gobuy
+git clone git@github.com:wfairclough/shopify-gobuy.git $GOPATH/src/github.com/wfairclough/shopify-gobuy
 ```
 
-There is a sample command line client under `cmd/gobuy` change directories to `$GOPATH/src/github.com/wfairclough/gobuy/cmd/gobuy` and run `go install` to compile.
+There is a sample command line client under `cmd/gobuy` change directories to `$GOPATH/src/github.com/wfairclough/shopify-gobuy/cmd/gobuy` and run `go install` to compile.
 
 
 ### Integrating with your projects
@@ -20,7 +20,7 @@ There is a sample command line client under `cmd/gobuy` change directories to `$
 Fetch the latest gobuy library
 
 ```bash
-go get github.com/wfairclough/gobuy
+go get github.com/wfairclough/shopify-gobuy
 ```
 
 Import the `gobuy` package to create a client
@@ -30,7 +30,7 @@ package main
 
 import (
   "fmt"
-  "github.com/wfairclough/gobuy"
+  "github.com/wfairclough/shopify-gobuy"
 )
 
 var (
@@ -53,4 +53,4 @@ func main() {
 
 ### License
 
-The gobuy Mobile Buy SDK is provided under an MIT Licence. See the [LICENSE](https://github.com/wfairclough/gobuy/blob/master/LICENSE) file.
+The gobuy Mobile Buy SDK is provided under an MIT Licence. See the [LICENSE](https://github.com/wfairclough/shopify-gobuy/blob/master/LICENSE) file.

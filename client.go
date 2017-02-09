@@ -3,6 +3,8 @@ package gobuy
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"text/template"
@@ -65,6 +67,7 @@ type requestOptions struct {
 	method      string
 	urlTemplate string
 	body        io.Reader
+	bodyObj     interface{}
 	pathParams  interface{}
 	queryParams map[string]string
 }
@@ -96,6 +99,14 @@ func (b *BuyClient) buildRequest(opts requestOptions, h header) (*http.Request, 
 		return nil, err
 	}
 	url := buf.String()
+
+	if opts.bodyObj != nil {
+		b, err := json.Marshal(opts.bodyObj)
+		if err != nil {
+			return nil, err
+		}
+		opts.body = bytes.NewBuffer(b)
+	}
 
 	// Create the new request
 	req, err := http.NewRequest(opts.method, url, opts.body)
@@ -141,7 +152,11 @@ func (b BuyClient) send(req *http.Request) (*shopifyResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &shopifyResponse{rsp}, nil
+	r := &shopifyResponse{rsp}
+	if r.StatusCode != 200 {
+		return nil, r.GetError()
+	}
+	return r, nil
 }
 
 type shopifyResponse struct {
@@ -151,4 +166,17 @@ type shopifyResponse struct {
 func (r *shopifyResponse) JsonDecode(v interface{}) error {
 	d := json.NewDecoder(r.Body)
 	return d.Decode(v)
+}
+
+func (r *shopifyResponse) GetError() error {
+	d := json.NewDecoder(r.Body)
+	type ShopifyErr struct {
+		Error string `json:"error"`
+	}
+	shopErr := &ShopifyErr{Error: "Could not decode response"}
+	err := d.Decode(&shopErr)
+	if err != nil {
+		return err
+	}
+	return errors.New(fmt.Sprintf("%d: %s", r.StatusCode, shopErr.Error))
 }

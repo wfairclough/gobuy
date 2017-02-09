@@ -1,7 +1,6 @@
 package gobuy
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
@@ -92,11 +91,10 @@ func (b *BuyClient) GetProducts(page, limit int) ([]*Product, error) {
 	if err != nil {
 		return nil, err
 	}
-	d := json.NewDecoder(rsp.Body)
 	list := &struct {
 		ProductListings []*Product `json:"product_listings"`
 	}{}
-	err = d.Decode(&list)
+	err = rsp.JsonDecode(&list)
 	return list.ProductListings, err
 }
 
@@ -112,11 +110,10 @@ func (b *BuyClient) GetProductByHandle(handle string) ([]*Product, error) {
 	if err != nil {
 		return nil, err
 	}
-	d := json.NewDecoder(rsp.Body)
 	list := &struct {
 		ProductListings []*Product `json:"product_listings"`
 	}{}
-	err = d.Decode(&list)
+	err = rsp.JsonDecode(&list)
 	return list.ProductListings, err
 }
 
@@ -133,10 +130,9 @@ func (b *BuyClient) GetProductTags(page, limit int) ([]*ProductTag, error) {
 	if err != nil {
 		return nil, err
 	}
-	d := json.NewDecoder(rsp.Body)
 	list := &struct {
 		Tags []*ProductTag `json:"tags"`
 	}{}
-	err = d.Decode(&list)
+	err = rsp.JsonDecode(&list)
 	return list.Tags, err
 }

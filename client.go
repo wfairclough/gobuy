@@ -176,7 +176,7 @@ func (r *shopifyResponse) GetError() error {
 	shopErr := &ShopifyErr{Error: "Could not decode response"}
 	err := d.Decode(&shopErr)
 	if err != nil {
-		return err
+		return errors.New(fmt.Sprintf("%d: %s", r.StatusCode, err.Error()))
 	}
 	return errors.New(fmt.Sprintf("%d: %s", r.StatusCode, shopErr.Error))
 }
